@@ -1,0 +1,29 @@
+{
+  "name": "ai-security-audit",
+  "version": "0.1.0",
+  "description": "General-purpose, evidence-driven AI security audit skill: recon, adaptive hunting, independent validation, coverage ledger, structured findings and reports for arbitrary repositories.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "security-audit": "bin/security-audit.js"
+  },
+  "scripts": {
+    "test": "node --test tests/unit.test.js tests/cli.test.js",
+    "audit:fixtures": "node bin/security-audit.js audit tests/fixtures/vulnerable-app --output .audit-demo --quick"
+  },
+  "keywords": [
+    "security",
+    "audit",
+    "skill",
+    "agent",
+    "appsec",
+    "sast",
+    "threat-modeling"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {
+    "ajv": "^8.17.1"
+  }
+}

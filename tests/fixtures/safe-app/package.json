@@ -1,0 +1,16 @@
+{
+  "name": "safe-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mitigated fixture for ai-security-audit false-positive tests. Patterns look risky; controls are present.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "pg": "^8.11.0",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "stripe": "^14.0.0"
+  }
+}

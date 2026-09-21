@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/ai-security-audit/main/schemas/coverage.schema.json",
+  "title": "Audit Coverage Ledger",
+  "description": "What the audit actually examined, per category. The report must distinguish 'no vulnerability found' from 'this area was not sufficiently audited'; this ledger is the source of that distinction.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "generated_at", "target", "categories"],
+  "properties": {
+    "version": { "type": "string" },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root"],
+      "properties": {
+        "root": { "type": "string" },
+        "commit": { "type": "string" },
+        "scope_notes": { "type": "string" }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "quick": { "type": "boolean" },
+        "deep": { "type": "boolean" },
+        "selected_categories": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "excluded_categories": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "reasoning": { "type": "string" }
+      }
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "status"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "authentication",
+              "authorization",
+              "api-security",
+              "business-logic",
+              "injection",
+              "client-side",
+              "secrets",
+              "dependencies",
+              "supply-chain",
+              "file-storage",
+              "cryptography",
+              "infrastructure",
+              "configuration",
+              "cloud-security",
+              "webhook-security",
+              "ai-llm-security",
+              "resource-exhaustion"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["complete", "partial", "not_applicable", "blocked", "needs_validation"]
+          },
+          "files_examined": { "type": "integer", "minimum": 0 },
+          "routes_examined": { "type": "integer", "minimum": 0 },
+          "candidates_found": { "type": "integer", "minimum": 0 },
+          "notes": { "type": "string" },
+          "gaps": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Specific areas within this category that were NOT examined, with reasons."
+          }
+        }
+      }
+    },
+    "trust_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "actors"],
+        "properties": {
+          "name": { "type": "string" },
+          "actors": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

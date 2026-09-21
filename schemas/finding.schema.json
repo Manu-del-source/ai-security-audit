@@ -1,0 +1,222 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/ai-security-audit/main/schemas/finding.schema.json",
+  "title": "Security Audit Finding",
+  "description": "A single candidate/confirmed/rejected security finding produced by an ai-security-audit run. Every confirmed finding must carry a complete threat model: who the attacker is, which boundary they cross, and the exact evidence chain.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "severity",
+    "status",
+    "category",
+    "confidence",
+    "affected_files",
+    "attack_surface",
+    "attacker",
+    "evidence",
+    "impact"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ASA-[A-Z0-9]{2,8}-[0-9]{3}$",
+      "description": "Stable finding identifier, e.g. ASA-AUTHZ-001. The numeric suffix must be unique within a run for the same category."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "description": "One-line statement of the concrete weakness, not the category name."
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "informational"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["candidate", "confirmed", "needs_validation", "rejected"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "authentication",
+        "authorization",
+        "api-security",
+        "business-logic",
+        "injection",
+        "client-side",
+        "secrets",
+        "dependencies",
+        "supply-chain",
+        "file-storage",
+        "cryptography",
+        "infrastructure",
+        "configuration",
+        "cloud-security",
+        "webhook-security",
+        "ai-llm-security",
+        "resource-exhaustion",
+        "other"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "How sure the hunter/validator is that the attack path is real, independent of severity."
+    },
+    "affected_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "lines"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Repo-relative POSIX path to the affected file. Must exist in the audited repository."
+          },
+          "lines": {
+            "type": "string",
+            "pattern": "^[0-9]+(-[0-9]+)?$",
+            "description": "Line or inclusive line range, e.g. '42' or '42-58'."
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Function/route/component containing the weakness."
+          }
+        }
+      }
+    },
+    "affected_components": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Named routes, handlers, services, jobs, or modules involved."
+    },
+    "attack_surface": {
+      "type": "string",
+      "minLength": 5,
+      "description": "The reachable entry point through which the attack begins (route, topic, bucket, CLI flag, CI event...)."
+    },
+    "attacker": {
+      "type": "string",
+      "minLength": 20,
+      "description": "Mandatory threat model: exactly who the attacker is, what they control, and what they are NOT (must state the trust position, e.g. 'an authenticated tenant user; they do not control the server process')."
+    },
+    "preconditions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Conditions that must hold for the attack path to work (deploy config, feature flags, privileges)."
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "detail"],
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Where the evidence comes from: 'code', 'config', 'lockfile', 'runtime-test', 'docs', 'git-history'."
+          },
+          "file": {
+            "type": "string",
+            "description": "Repo-relative path if the evidence is file-backed (should exist)."
+          },
+          "lines": {
+            "type": "string",
+            "pattern": "^[0-9]+(-[0-9]+)?$"
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 10,
+            "description": "What the evidence shows and why it matters. Must be specific, not a restatement of the category."
+          }
+        }
+      }
+    },
+    "data_flow": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered steps from attacker-controlled source to the vulnerable operation, e.g. ['POST /api/avatar body.filename (untrusted)', 'path.join(uploadsDir, filename) (no sanitization)', 'fs.createWriteStream -> arbitrary write inside process cwd']."
+    },
+    "impact": {
+      "type": "string",
+      "minLength": 15,
+      "description": "Concrete worst-case outcome for the asset owner if exploited, tied to the detected application domain."
+    },
+    "reproduction": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Non-destructive steps a reviewer can follow (static reasoning, local test, or controlled PoC). Never include commands that attack third-party systems."
+    },
+    "severity_reasoning": {
+      "type": "string",
+      "description": "Why this severity given exploitability, privileges required, complexity, and C-I-A impact. Required for confirmed findings by mechanical validation policy, optional in schema."
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["confirmed", "needs_validation", "rejected"]
+        },
+        "validator": {
+          "type": "string",
+          "description": "Identifier of the validating agent/session. Must differ from the discovering hunter when practical."
+        },
+        "method": {
+          "type": "string",
+          "description": "How it was validated: 'code-reasoning', 'local-test', 'controlled-poc', 'config-inspection'."
+        },
+        "attempted_rejections": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Disproof hypotheses the validator actually tested and why each failed to kill the finding."
+        },
+        "mechanical_checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_valid": { "type": "boolean" },
+            "evidence_files_exist": { "type": "boolean" },
+            "secrets_redacted": { "type": "boolean" }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "remediation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "CWE/CVE/OWASP identifiers or doc URLs."
+    },
+    "reaudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Populated by `security-audit reaudit` when comparing against a previous audit.",
+      "properties": {
+        "previous_id": { "type": "string" },
+        "relation": {
+          "type": "string",
+          "enum": ["new", "resolved", "regression", "unchanged", "changed"]
+        },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}
