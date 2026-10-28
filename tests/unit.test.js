@@ -109,7 +109,7 @@ test('util: verifyLocation rejects traversal, absolute paths, and symlink escape
     fs.writeFileSync(outsideFile, 'const privateValue = "not part of target";\\n');
     fs.symlinkSync(outsideFile, path.join(root, 'escape.js'));
 
-    assert.equal(verifyLocation(root, '../verify-outside/private.js', '1').exists, false);
+    assert.equal(verifyLocation(root, path.relative(root, outsideFile), '1').exists, false);
     assert.equal(verifyLocation(root, outsideFile, '1').exists, false);
     assert.equal(verifyLocation(root, 'escape.js', '1').exists, false);
     assert.equal(verifyLocation(root, 'inside.js', '1').exists, true);
