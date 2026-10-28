@@ -71,6 +71,48 @@ for (const dir of skillDirs) {
   }
 }
 
+// Keep the machine-readable manifest, skill entrypoints, and human catalog synchronized.
+const manifestPath = path.join(SKILLS_DIR, 'manifest.json');
+const catalogPath = path.join(SKILLS_DIR, 'README.md');
+if (!fs.existsSync(manifestPath)) {
+  errors.push('Missing skills/manifest.json');
+} else {
+  try {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    if (manifest.schema_version !== 1 || !Array.isArray(manifest.skills)) {
+      errors.push('skills/manifest.json: expected schema_version 1 and a skills array');
+    } else {
+      const names = manifest.skills.map((skill) => skill && skill.name).sort();
+      if (new Set(names).size !== names.length) errors.push('skills/manifest.json: duplicate skill names');
+      if (JSON.stringify(names) !== JSON.stringify(skillDirs)) {
+        errors.push('skills/manifest.json: skill names must exactly match skill directories');
+      }
+      for (const skill of manifest.skills) {
+        if (!skill || typeof skill.name !== 'string') continue;
+        const expectedPath = `skills/${skill.name}/SKILL.md`;
+        if (skill.path !== expectedPath) errors.push(`${skill.name}: manifest path must be ${expectedPath}`);
+        if (!Array.isArray(skill.triggers) || skill.triggers.length === 0 || skill.triggers.some((item) => typeof item !== 'string' || !item.trim())) {
+          errors.push(`${skill.name}: manifest must include non-empty string triggers`);
+        }
+        if (typeof skill.focus !== 'string' || skill.focus.trim().length < 20) {
+          errors.push(`${skill.name}: manifest focus must be a descriptive string`);
+        }
+        if (!fs.existsSync(path.join(ROOT, expectedPath))) errors.push(`${skill.name}: manifest entrypoint does not exist`);
+      }
+    }
+  } catch (error) {
+    errors.push(`skills/manifest.json: invalid JSON (${error.message})`);
+  }
+}
+if (!fs.existsSync(catalogPath)) {
+  errors.push('Missing skills/README.md catalog');
+} else {
+  const catalog = fs.readFileSync(catalogPath, 'utf8');
+  for (const dir of skillDirs) {
+    if (!catalog.includes(`\`${dir}\``)) errors.push(`skills/README.md: catalog does not list ${dir}`);
+  }
+}
+
 if (errors.length) {
   console.error('Skill validation failed:');
   for (const error of errors) console.error(`- ${error}`);
