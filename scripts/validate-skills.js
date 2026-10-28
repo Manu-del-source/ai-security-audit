@@ -41,26 +41,26 @@ for (const dir of skillDirs) {
   }
 
   const content = fs.readFileSync(skillFile, 'utf8');
-  const frontmatter = content.match(/^---\\r?\\n([\\s\\S]*?)\\r?\\n---(?:\\r?\\n|$)/);
+  const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
   if (!frontmatter) {
     errors.push(`${dir}: missing YAML frontmatter`);
     continue;
   }
 
-  const name = frontmatter[1].match(/^name:\\s*([^\\r\\n]+)\\s*$/m)?.[1]?.trim();
-  const description = frontmatter[1].match(/^description:\\s*([\\s\\S]*?)(?=^[A-Za-z_][\\w-]*:\\s*|\\s*$)/m)?.[1]?.trim();
+  const name = frontmatter[1].match(/^name:\s*([^\r\n]+)\s*$/m)?.[1]?.trim();
+  const description = frontmatter[1].match(/^description:\s*([\s\S]*?)(?=^[A-Za-z_][\w-]*:\s*|\s*$)/m)?.[1]?.trim();
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(dir)) errors.push(`${dir}: directory name must be lowercase kebab-case`);
   if (name !== dir) errors.push(`${dir}: frontmatter name must match directory (got ${name || 'missing'})`);
   if (!description || description.length < 20 || description.length > 1024) {
     errors.push(`${dir}: description must contain 20–1024 characters`);
   }
-  if (!/^## Workflow\\s*$/m.test(content)) errors.push(`${dir}: missing ## Workflow section`);
-  if (!/^## References\\s*$/m.test(content)) errors.push(`${dir}: missing ## References section`);
+  if (!/^## Workflow\s*$/m.test(content)) errors.push(`${dir}: missing ## Workflow section`);
+  if (!/^## References\s*$/m.test(content)) errors.push(`${dir}: missing ## References section`);
   if (!/authorized|scope|non-destructive/i.test(content)) errors.push(`${dir}: missing authorization or safe-testing guidance`);
   if (!/validat|disprov|false positive|candidate/i.test(content)) errors.push(`${dir}: missing finding-validation guidance`);
 
   // Validate repository-relative paths explicitly referenced as inline code.
-  const refs = [...content.matchAll(/`(\\.\\.\\/\\.\\.\\/[^ `]+)`/g)].map((match) => match[1]);
+  const refs = [...content.matchAll(/`(\.\.\/\.\.\/[^ `]+)`/g)].map((match) => match[1]);
   for (const ref of refs) {
     const fileRef = ref.split('#')[0];
     const resolved = path.resolve(path.dirname(skillFile), fileRef);
