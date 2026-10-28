@@ -8,8 +8,9 @@
     "security-audit": "bin/security-audit.js"
   },
   "scripts": {
-    "test": "node --test tests/unit.test.js tests/cli.test.js",
-    "audit:fixtures": "node bin/security-audit.js audit tests/fixtures/vulnerable-app --output .audit-demo --quick"
+    "test": "node --test tests/unit.test.js tests/cli.test.js tests/skills.test.js",
+    "audit:fixtures": "node bin/security-audit.js audit tests/fixtures/vulnerable-app --output .audit-demo --quick",
+    "skills:validate": "node scripts/validate-skills.js"
   },
   "keywords": [
     "security",
