@@ -50,6 +50,10 @@ Artifacts live in the output directory:
 | `validation-report.json` | CLI | Mechanical validation results |
 | `REPORT.md` etc. | CLI | Human-readable reports |
 
+## Focused skill entrypoints
+
+For a deliberately scoped review, the repository also provides discoverable skills under `skills/`: `security-recon`, `security-api`, `security-ai-llm`, `security-secrets`, and `security-supply-chain`. The catalog is in `skills/README.md`. These focused entrypoints inherit this document's evidence standard, authorized-use restrictions, and anti-false-positive rules; they must not imply that unexamined categories were audited.
+
 ## Phase 1 — Reconnaissance (done, verify it)
 
 Read `stack.json` and sanity-check it against the repository. The detector is
