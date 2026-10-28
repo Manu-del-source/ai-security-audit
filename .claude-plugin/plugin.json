@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "ai-security-audit",
+  "version": "0.1.0",
+  "description": "Evidence-driven security audits with adaptive planning, independent finding validation, coverage tracking, and redacted reports.",
+  "author": {
+    "name": "Manu-del-source"
+  },
+  "homepage": "https://github.com/Manu-del-source/ai-security-audit",
+  "repository": "https://github.com/Manu-del-source/ai-security-audit",
+  "license": "MIT",
+  "keywords": [
+    "security",
+    "appsec",
+    "code-audit",
+    "threat-modeling",
+    "agent-skill"
+  ]
+}
