@@ -1,3 +1,5 @@
+[![CI](https://github.com/Manu-del-source/ai-security-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/Manu-del-source/ai-security-audit/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
 # ai-security-audit
 
 General-purpose, evidence-driven **AI security audit skill** for arbitrary
