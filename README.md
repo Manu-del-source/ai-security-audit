@@ -35,6 +35,38 @@ must carry `severity_reasoning` and a log of `validation.attempted_rejections`
 
 ## Install
 
+### Install as an agent skill
+
+This repository follows the Agent Skills layout: `SKILL.md` is the entrypoint,
+and its referenced playbooks, validation protocol, schemas, rules, and scripts
+must stay alongside it. Install the **whole repository**, not only the
+`SKILL.md` file.
+
+Clone it into the skill directory used by your coding agent:
+
+```bash
+# Claude Code
+git clone https://github.com/Manu-del-source/ai-security-audit.git \
+  ~/.claude/skills/ai-security-audit
+
+# OpenAI Codex
+git clone https://github.com/Manu-del-source/ai-security-audit.git \
+  ~/.codex/skills/ai-security-audit
+
+# Cursor
+git clone https://github.com/Manu-del-source/ai-security-audit.git \
+  ~/.cursor/skills/ai-security-audit
+```
+
+If you use more than one agent, clone or copy the same repository into each
+agent's skill directory. Restart or refresh the agent session if it does not
+discover the skill immediately. Keep the folder name `ai-security-audit`
+and preserve the repository's internal paths.
+
+The optional Claude Code plugin manifest is provided at
+`.claude-plugin/plugin.json`; the skill itself remains usable without plugin
+installation or any required runtime dependencies.
+
 ```bash
 npm install -g .        # exposes the `security-audit` CLI
 # or use it in place:
