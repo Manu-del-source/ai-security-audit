@@ -75,6 +75,24 @@ node bin/security-audit.js --help
 
 Zero required runtime dependencies; `ajv` is an optional enhancement.
 
+## Modular agent skills
+
+In addition to the full audit workflow, the repository includes focused Agent Skills entrypoints under `skills/`:
+
+- `security-recon` — repository reconnaissance and audit planning.
+- `security-api` — API authorization, input handling, and business logic.
+- `security-ai-llm` — prompt injection, retrieval isolation, and tool authorization.
+- `security-secrets` — credential exposure and secret handling.
+- `security-supply-chain` — dependency, CI, and build/release risks.
+
+See [the skill catalog](skills/README.md). Each focused skill shares the main project's evidence, validation, and authorized-use rules. Install the complete repository so its referenced playbooks, schemas, rules, and scripts remain available.
+
+Validate the skill catalog locally:
+
+```bash
+npm run skills:validate
+```
+
 ## Usage
 
 ```bash
