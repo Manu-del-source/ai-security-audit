@@ -15,7 +15,7 @@ test('modular agent skills have valid metadata, workflow, safety guidance, and r
     cwd: ROOT,
     encoding: 'utf8',
   });
-  assert.match(output, /Skill validation passed: 5 modular skills checked\\./);
+  assert.match(output, /Skill validation passed: 5 modular skills checked\./);
 });
 
 test('validator rejects a missing skill entrypoint', (t) => {
@@ -47,7 +47,7 @@ test('validator rejects broken or out-of-repository references and missing safet
     '## References',
     '`../../../../outside.md`',
     '',
-  ].join('\\n'));
+  ].join('\n'));
 
   const result = spawnSync(process.execPath, [VALIDATOR, '--root', fixture], { encoding: 'utf8' });
   assert.equal(result.status, 1);
