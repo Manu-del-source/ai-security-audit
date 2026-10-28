@@ -42,7 +42,7 @@ test('validator rejects broken or out-of-repository references and missing safet
     '# Example',
     '',
     '## Workflow',
-    'Do the work.',
+    'Stay within the authorized scope.',
     '',
     '## References',
     '`../../../../outside.md`',
