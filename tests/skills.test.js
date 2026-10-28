@@ -18,6 +18,31 @@ test('modular agent skills have valid metadata, workflow, safety guidance, and r
   assert.match(output, /Skill validation passed: 5 modular skills checked\./);
 });
 
+
+test('manifest exposes every focused skill with useful discovery triggers and category-specific guidance', () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'skills', 'manifest.json'), 'utf8'));
+  const catalog = fs.readFileSync(path.join(ROOT, 'skills', 'README.md'), 'utf8');
+  const expected = {
+    'security-recon': [/trust boundaries/i, /audit-plan\.json/i],
+    'security-api': [/authorization/i, /webhook/i],
+    'security-ai-llm': [/prompt injection/i, /tenant/i],
+    'security-secrets': [/redact/i, /credential/i],
+    'security-supply-chain': [/lockfiles?/i, /CI/i],
+  };
+
+  assert.equal(manifest.schema_version, 1);
+  assert.equal(manifest.skills.length, Object.keys(expected).length);
+  for (const [name, checks] of Object.entries(expected)) {
+    const entry = manifest.skills.find((skill) => skill.name === name);
+    assert.ok(entry, `manifest is missing ${name}`);
+    assert.equal(entry.path, `skills/${name}/SKILL.md`);
+    assert.ok(entry.triggers.length > 0, `${name} needs discovery triggers`);
+    assert.ok(catalog.includes(name), `catalog is missing ${name}`);
+    const skillText = fs.readFileSync(path.join(ROOT, entry.path), 'utf8');
+    for (const check of checks) assert.match(skillText, check, `${name} is missing expected audit guidance ${check}`);
+  }
+});
+
 test('validator rejects a missing skill entrypoint', (t) => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'skills-validator-'));
   t.after(() => fs.rmSync(fixture, { recursive: true, force: true }));
