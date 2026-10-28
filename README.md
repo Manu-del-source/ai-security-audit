@@ -85,7 +85,7 @@ In addition to the full audit workflow, the repository includes focused Agent Sk
 - `security-secrets` — credential exposure and secret handling.
 - `security-supply-chain` — dependency, CI, and build/release risks.
 
-See [the skill catalog](skills/README.md). Each focused skill shares the main project's evidence, validation, and authorized-use rules. Install the complete repository so its referenced playbooks, schemas, rules, and scripts remain available.
+See [the skill catalog](skills/README.md) and the machine-readable [skills manifest](skills/manifest.json), which exposes skill entrypoints and discovery triggers. Each focused skill shares the main project's evidence, validation, and authorized-use rules. Install the complete repository so its referenced playbooks, schemas, rules, and scripts remain available.
 
 Validate the skill catalog locally:
 
