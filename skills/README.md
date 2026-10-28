@@ -4,6 +4,8 @@ This directory exposes focused, discoverable entrypoints for common audit tasks.
 
 ## Available skills
 
+For agent tooling and automated discovery, use [`manifest.json`](manifest.json), which records each skill's entrypoint, focus, and example trigger phrases. The manifest is validated against the actual skill directories and this catalog in CI.
+
 | Skill | Use when | Existing playbooks |
 |---|---|---|
 | `security-recon` | Establish project scope, stack, trust boundaries, and audit plan | `agents/reconnaissance.md`, `lib/plan.js` |
