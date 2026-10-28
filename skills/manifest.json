@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "description": "Machine-readable index of focused security audit skills.",
+  "skills": [
+    {
+      "name": "security-recon",
+      "path": "skills/security-recon/SKILL.md",
+      "focus": "Repository reconnaissance, scope, stack, trust boundaries, and audit planning",
+      "triggers": [
+        "scope a security review",
+        "map attack surface",
+        "prepare an audit plan"
+      ]
+    },
+    {
+      "name": "security-api",
+      "path": "skills/security-api/SKILL.md",
+      "focus": "API authorization, validation, injection, data exposure, webhooks, and business logic",
+      "triggers": [
+        "audit API security",
+        "review backend routes",
+        "check authorization"
+      ]
+    },
+    {
+      "name": "security-ai-llm",
+      "path": "skills/security-ai-llm/SKILL.md",
+      "focus": "Prompt injection, tool authorization, RAG isolation, data leakage, and AI cost abuse",
+      "triggers": [
+        "audit an LLM integration",
+        "review RAG security",
+        "check AI agent tools"
+      ]
+    },
+    {
+      "name": "security-secrets",
+      "path": "skills/security-secrets/SKILL.md",
+      "focus": "Credential exposure, secret storage, logging, and report redaction",
+      "triggers": [
+        "scan for exposed secrets",
+        "review secret management",
+        "check credential leakage"
+      ]
+    },
+    {
+      "name": "security-supply-chain",
+      "path": "skills/security-supply-chain/SKILL.md",
+      "focus": "Dependencies, lockfiles, CI permissions, build inputs, and release provenance",
+      "triggers": [
+        "audit dependencies",
+        "review CI/CD security",
+        "check supply-chain risks"
+      ]
+    }
+  ]
+}
