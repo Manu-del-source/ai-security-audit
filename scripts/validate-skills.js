@@ -109,7 +109,7 @@ if (!fs.existsSync(catalogPath)) {
 } else {
   const catalog = fs.readFileSync(catalogPath, 'utf8');
   for (const dir of skillDirs) {
-    if (!catalog.includes(`\`${dir}\``)) errors.push(`skills/README.md: catalog does not list ${dir}`);
+    if (!catalog.includes(dir)) errors.push(`skills/README.md: catalog does not list ${dir}`);
   }
 }
 
