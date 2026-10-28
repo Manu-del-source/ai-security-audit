@@ -61,7 +61,7 @@ test('validator rejects broken or out-of-repository references and missing safet
   fs.writeFileSync(path.join(skillDir, 'SKILL.md'), [
     '---',
     'name: example-skill',
-    'description: A test skill with a sufficiently descriptive summary for validation.',
+    'description: A test skill with a sufficiently descriptive summary for this check.',
     '---',
     '',
     '# Example',
