@@ -67,12 +67,14 @@ test('validator rejects broken or out-of-repository references and missing safet
     '# Example',
     '',
     '## Workflow',
-    'Stay within the authorized scope.',
+    'Inspect the example workflow.',
     '',
     '## References',
     '`../../../../outside.md`',
     '',
   ].join('\n'));
+  fs.writeFileSync(path.join(fixture, 'skills', 'manifest.json'), JSON.stringify({ schema_version: 1, skills: [{ name: 'example-skill', path: 'skills/example-skill/SKILL.md', focus: 'Example skill used to test validator rejection behavior.', triggers: ['test validator'] }] }));
+  fs.writeFileSync(path.join(fixture, 'skills', 'README.md'), '# Skills catalog\n\n`example-skill`\n');
 
   const result = spawnSync(process.execPath, [VALIDATOR, '--root', fixture], { encoding: 'utf8' });
   assert.equal(result.status, 1);
