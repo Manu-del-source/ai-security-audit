@@ -100,6 +100,25 @@ test('util: verifyLocation range math', () => {
   assert.equal(missing.exists, false);
 });
 
+test('util: verifyLocation rejects traversal, absolute paths, and symlink escapes', () => {
+  const root = tmpDir('verify-root');
+  const outside = tmpDir('verify-outside');
+  const outsideFile = path.join(outside, 'private.js');
+  try {
+    fs.writeFileSync(path.join(root, 'inside.js'), 'const ok = true;\\n');
+    fs.writeFileSync(outsideFile, 'const privateValue = "not part of target";\\n');
+    fs.symlinkSync(outsideFile, path.join(root, 'escape.js'));
+
+    assert.equal(verifyLocation(root, '../verify-outside/private.js', '1').exists, false);
+    assert.equal(verifyLocation(root, outsideFile, '1').exists, false);
+    assert.equal(verifyLocation(root, 'escape.js', '1').exists, false);
+    assert.equal(verifyLocation(root, 'inside.js', '1').exists, true);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+    fs.rmSync(outside, { recursive: true, force: true });
+  }
+});
+
 test('util: redactString masks known secret shapes', () => {
   const cases = [
     ['postgres://admin:supersecret123@db.internal:5432/prod', 'supersecret123'],
